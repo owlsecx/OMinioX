@@ -18,22 +18,18 @@
 
 ## 📌 Overview
 
-Offline MinIO / Ceph RGW configuration & S3 bucket-policy auditor
+OMinioX is an offline MinIO / Ceph RGW configuration and S3 bucket-policy auditor. It reviews env/config files, systemd units, `mc admin` JSON exports, Ceph RGW settings, and IAM/bucket policies, including an effective-access simulator. Operation is 100% offline and read-only with CWE/MITRE mapping and multi-format export.
 
 ---
 
 ## ✨ Features
 
-- MinIO env / config.env auditor — default root credentials, weak & short secrets (always masked), console exposure, plaintext server URL, TLS certs, KMS / SSE, audit & logger webhooks, OpenID / LDAP trust, Prometheus auth, compression of encrypted data
-- systemd unit review (root service, missing sandboxing)
-- `mc admin` JSON export analysis — users, groups, policies, service accounts, anonymous bucket access
-- Ceph RGW ceph.conf auditor — rgw_enable_apis, SSL frontends, Keystone/LDAP trust, SSE keys, cephx
-- S3 bucket-policy / IAM policy semantic evaluator — Principal '*', NotPrincipal/NotAction pitfalls, SecureTransport, IpAddress 0.0.0.0/0, Referer trust
-- Bucket hygiene — versioning, object-lock, lifecycle, default encryption, CORS wildcard origins
-- Effective-access simulator (explicit deny → allow → implicit deny) with condition context
-- CWE + MITRE ATT&CK mapping, score & grade
-- Exports TXT / MD / JSON / CSV / SARIF 2.1.0
-- Self-test --demo, CI gates --fail-on / --min-severity
+- MinIO env/config.env audit: default root creds, weak secrets (masked), console exposure, TLS, KMS/SSE, webhooks, OpenID/LDAP, Prometheus auth
+- systemd unit review for root service and missing sandboxing
+- `mc admin` JSON export analysis: users, groups, policies, service accounts, anonymous bucket access
+- Ceph RGW ceph.conf checks: APIs, SSL frontends, Keystone/LDAP trust, SSE keys, cephx
+- S3 bucket-policy / IAM semantic evaluator and effective-access simulator with condition context
+- Bucket hygiene (versioning, object-lock, lifecycle, encryption, CORS); score/grade; TXT/MD/JSON/CSV/SARIF
 
 ---
 
@@ -47,7 +43,10 @@ Offline MinIO / Ceph RGW configuration & S3 bucket-policy auditor
 ## 🚀 Usage
 
 ```bash
-./OMinioX
+./OMinioX --env config.env --policy bucket.json --scan
+./OMinioX --simulate "*" s3:GetObject "arn:aws:s3:::data/*" --format json -o minio.json
+./OMinioX --demo --fail-on high
+./OMinioX --help
 ```
 
 ---
